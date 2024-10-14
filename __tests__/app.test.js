@@ -5,6 +5,8 @@ const seed = require('../db/seeds/seed.js');
 const testData = require('../db/data/test-data/index.js');
 const endpoints = require('../endpoints.json')
 
+
+
 beforeEach(() => seed(testData));
 afterAll(() => db.end())
 
@@ -74,6 +76,42 @@ describe('/api/articles/:article_id', () => {
             .expect(404)
             .then(({body})=> {
                 expect(body.msg).toBe('Not Found')                
+            })
+    })
+})
+
+describe('/api/articles', () => {
+    test('GET: 200 responds with an array of articles each of which has the correct properties', () => {
+        return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({body}) => {
+                body.articles.forEach((article) =>{
+                    expect(article).toHaveProperty('author')
+                    expect(article).toHaveProperty('title')
+                    expect(article).toHaveProperty('article_id')
+                    expect(article).toHaveProperty('topic')
+                    expect(article).toHaveProperty('created_at')
+                    expect(article).toHaveProperty('votes')
+                    expect(article).toHaveProperty('article_img_url')
+                    expect(article).not.toHaveProperty('body')
+                })
+            })
+    })
+    test('GET: 200 responds with an array of articles sorted in descending order by date', () => {
+        return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles).toBeSortedBy('created_at', {descending: true})
+            })
+    })
+    test('GET: 200 responds with an array of articles each of which has a comment count property totalling all comments made on that article', () => {
+        return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({body}) => {
+                expect(body.articles[0]).toHaveProperty('comment_count', "2")
             })
     })
 })
