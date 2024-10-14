@@ -1,8 +1,9 @@
 const express = require('express');
 const { getAllTopics } = require('./controllers/topics.controllers');
-const { serverErrorHandling } = require('./error-handling');
+const { serverErrorHandling, psqlErrorHandling, customErrorHandling } = require('./error-handling');
 const app = express();
-const endpoints = require('./endpoints.json')
+const endpoints = require('./endpoints.json');
+const { getArticleById } = require('./controllers/articles.controllers');
 
 
 app.get('/api', (request, response, next) => {
@@ -11,6 +12,8 @@ app.get('/api', (request, response, next) => {
 
 app.get('/api/topics', getAllTopics )
 
+app.get('/api/articles/:article_id', getArticleById)
+
 
 //last endpoint
 app.all('/*', (request, response, next)=>{
@@ -18,6 +21,9 @@ app.all('/*', (request, response, next)=>{
 })
 
 //error handling
+app.use(psqlErrorHandling)
+
+app.use(customErrorHandling)
 
 
 

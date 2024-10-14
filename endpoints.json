@@ -25,5 +25,22 @@
         }
       ]
     }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an object containing one article as selected by the provided article id",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "author": "butter_bridge",
+      "title": "Living in the shadow of a great man",
+      "article_id": 1,
+      "topic": "mitch",
+      "body": "I find this existence challenging",
+      "votes": 100,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      "created_at": "2020-07-09 21:11:00"
+      }
+    }
+    
   }
 }
