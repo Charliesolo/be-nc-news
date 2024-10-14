@@ -3,6 +3,7 @@ const request = require('supertest');
 const db = require('../db/connection.js');
 const seed = require('../db/seeds/seed.js');
 const testData = require('../db/data/test-data/index.js');
+const endpoints = require('../endpoints.json')
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end())
@@ -14,6 +15,17 @@ describe('/api/not-a-url', () => {
             .expect(404)
             .then(({body})=> {
                 expect(body.msg).toBe("Not Found")
+            })
+    })
+})
+
+describe('/api', () => {
+    test('GET: 200 responds with an array of all other endpoints', () => {
+        return request(app)
+            .get('/api')
+            .expect(200)
+            .then(({body})=> {
+                expect(body.endpoints).toEqual(endpoints)
             })
     })
 })
