@@ -1,6 +1,17 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+## Setting up Databases
+In order to set up the databases to run this .api you will need to add 2 .env files to the root of the directory: 
+* .env.development
+* .env.test
+
+These files should contain:
+> PGDATABASE=nc_news
+
+and 
+> PGDATABASE=nc_news_test
+
+respectively
 
 
 
