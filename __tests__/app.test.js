@@ -21,7 +21,7 @@ describe('/api/not-a-url', () => {
     })
 })
 
-describe('/api', () => {
+describe('GET /api', () => {
     test('GET: 200 responds with an array of all other endpoints', () => {
         return request(app)
             .get('/api')
@@ -32,7 +32,7 @@ describe('/api', () => {
     })
 })
 
-describe('/api/topics', () => {
+describe('GET /api/topics', () => {
     test('GET: 200 responds with an array of topics with each of which has a slug and description property', () => {
         return request(app)
             .get('/api/topics/')
@@ -46,7 +46,7 @@ describe('/api/topics', () => {
     })
 })
 
-describe('/api/articles/:article_id', () => {
+describe('GET /api/articles/:article_id', () => {
     test('GET: 200 responds with an article object with the correct properties', () => {
         return request(app)
             .get('/api/articles/1')
@@ -80,7 +80,7 @@ describe('/api/articles/:article_id', () => {
     })
 })
 
-describe('/api/articles', () => {
+describe('GET /api/articles', () => {
     test('GET: 200 responds with an array of articles each of which has the correct properties', () => {
         return request(app)
             .get('/api/articles')
@@ -215,6 +215,55 @@ describe('POST /api/articles/:article_id/comments', () => {
         })        
     })
 })
+
+describe('PATCH /api/articles/:article_id', () => {
+    test('PATCH 200 increases the votes of a given article by the value provided in the body and returns the updated article', () => {
+        return request(app)
+        .patch('/api/articles/2')
+        .expect(200)
+        .send({inc_votes: -5})
+        .then(({body}) => {
+            expect(body.article.votes).toBe(-5)
+        })
+    })
+    test('PATCH 400 returns bad request when given a body without the correct key', () => {
+        return request(app)
+        .patch('/api/articles/2')
+        .expect(400)
+        .send({})
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('PATCH 400 returns bad request when given a body with the correct key but invalid fields', () => {
+        return request(app)
+        .patch('/api/articles/2')
+        .expect(400)
+        .send({inc_votes: 'Not a number'})
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('PATCH 400 returns bad request when given an invalid article id', () => {
+        return request(app)
+        .patch('/api/articles/not-an-id')
+        .expect(400)
+        .send({inc_votes: 5})
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('PATCH 404 returns Not Found when given an valid article id for an article that doesn\'t exist', () => {
+        return request(app)
+        .patch('/api/articles/9999')
+        .expect(404)
+        .send({inc_votes: 5})
+        .then(({body}) => {
+            expect(body.msg).toBe('Not Found')
+        })
+    })
+})
+
 
 
 
