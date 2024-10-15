@@ -178,6 +178,16 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(body.comment).toHaveProperty('body', "test comment")
         })        
     })
+    test('POST 201 adds a comment to the database when given a correctly formatted body and correct article id and ignores any additional properties on the body', () => {
+        return request(app)
+        .post('/api/articles/2/comments')
+        .expect(201)
+        .send({username: "butter_bridge", body: "test comment", votes: 1000, comment_id: 5})
+        .then(({body}) => {
+            expect(body.comment).toHaveProperty('author', "butter_bridge")
+            expect(body.comment).toHaveProperty('body', "test comment")
+        })        
+    })
     test('POST 400 returns an error of bad request when given a body missing either required fields', () => {
         return request(app)
         .post('/api/articles/2/comments')
