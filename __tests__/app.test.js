@@ -116,6 +116,59 @@ describe('/api/articles', () => {
     })
 })
 
+describe('GET /api/articles/:article_id/comments', () => {
+    test('GET: 200 responds with an array of all comments associated with a given article with the correct properties', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            body.comments.forEach((comment) => {
+                expect(comment).toHaveProperty('comment_id')
+                expect(comment).toHaveProperty('votes')
+                expect(comment).toHaveProperty('created_at')
+                expect(comment).toHaveProperty('author')
+                expect(comment).toHaveProperty('body')
+                expect(comment).toHaveProperty('article_id')
+            }) 
+        })
+    })
+    test('GET: 200 returned comments are sorted from most recent to oldest', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toBeSortedBy('created_at', {descending: true})
+        })
+    })
+    test('GET: 400 responds with an error message of "Bad Request" when given an invalid article id', () => {
+        return request(app)
+        .get('/api/articles/not-an-id/comments')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('GET: 404 responds with an error message of "Not Found" when given a valid article id not associated with an article', () => {
+        return request(app)
+        .get('/api/articles/9999/comments')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('Not Found')
+        })
+    })
+    test('GET: 200 responds with an empty array when given a valid article that has no comments', () => {
+        return request(app)
+        .get('/api/articles/2/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(Array.isArray(body.comments)).toBe(true)
+            expect(body.comments).toHaveLength(0)
+        })
+    })
+})
+
+
+
 
 
 
