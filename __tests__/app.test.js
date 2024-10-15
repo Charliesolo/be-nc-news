@@ -304,7 +304,20 @@ describe('DELETE /api/comments/:comment_id', () => {
     })
 })
 
-
+describe('GET /api/users',()=> {
+    test('GET 200 responds with an array of users each with username, name and avatar_url properties', () => {
+        return request(app)
+        .get('/api/users')
+        .expect(200)
+        .then(({body}) => {
+            body.users.forEach((user) => {
+                expect(user).toHaveProperty('username')
+                expect(user).toHaveProperty('name')
+                expect(user).toHaveProperty('avatar_url')
+            })
+        })
+    })
+})
 
 
 
