@@ -360,12 +360,12 @@ describe(' GET /api/articles (sorting queries)', () => {
             expect(body.msg).toBe('Invalid Input')
         })
     })
-    test('GET 200 returned articles are sorted by sorted_by query and ordered by order query and any additional queries are ignored', () => {
+    test('GET 400 returns bad request if trying to use an invalid query', () => {
         return request(app)
-        .get('/api/articles?sorted_by=votes&order=asc&notaquery=true')
-        .expect(200)
+        .get('/api/articles?spppprted_by=votes&order=asc')
+        .expect(400)
         .then(({body}) => {
-            expect(body.articles).toBeSortedBy('votes', {descending: false})
+            expect(body.msg).toBe('Bad Request')
         })
     })
 })
@@ -406,8 +406,7 @@ describe('GET /api/articles/:article_id (comment_count)', () => {
         return request(app)
         .get('/api/articles/2')
         .expect(200)
-        .then(({body}) =>{
-            console.log(body.article)
+        .then(({body}) =>{            
             expect(body.article).toHaveProperty('comment_count', "0")
         })
     })
