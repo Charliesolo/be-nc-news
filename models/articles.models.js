@@ -14,7 +14,12 @@ exports.selectArticleById = (article_id) => {
         })
 }
 
-exports.selectAllArticles = () => {
+exports.selectAllArticles = (sorted_by = 'created_at', order='desc') => {
+    const allowedSortCategories = ['author', 'title', 'article_id', 'topic', 'votes', 'article_img_url', 'comment_count', 'created_at' ]
+    const allowedOrders = ['asc', 'desc']
+    if (!allowedSortCategories.includes(sorted_by) || !allowedOrders.includes(order)){
+        return Promise.reject({status:400, msg:'Invalid Input' })
+    }
     return db.query(
         `
         SELECT articles.author, title, articles.article_id, topic, articles.created_at::varchar, articles.votes, article_img_url, COUNT(comments.comment_id) 
@@ -23,7 +28,7 @@ exports.selectAllArticles = () => {
         LEFT JOIN comments
         ON articles.article_id = comments.article_id
         GROUP BY articles.author, title, articles.article_id, topic, articles.created_at::varchar, articles.votes, article_img_url
-        ORDER BY created_at DESC;
+        ORDER BY ${sorted_by} ${order};
         `  
     )
         .then(({rows}) => {                             

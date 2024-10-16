@@ -319,7 +319,58 @@ describe('GET /api/users',()=> {
     })
 })
 
+describe(' GET /api/articles (sortign queries)', () => {
+    test('GET 200 returned articles are by default sorted by created_at desc', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toBeSortedBy('created_at', {descending: true})
+        })
+    })
+    test('GET 200 returned articles are sorted by sorted_by query if provided, defaulting to descending', () => {
+        return request(app)
+        .get('/api/articles?sorted_by=votes')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toBeSortedBy('votes', {descending: true})
+        })
+    })
+    test('GET 400 returns bad request if trying to sort by an invalid category', () => {
+        return request(app)
+        .get('/api/articles?sorted_by=body')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Invalid Input')
+        })
+    })
+    test('GET 200 returned articles are sorted by sorted_by query and ordered by order query', () => {
+        return request(app)
+        .get('/api/articles?sorted_by=votes&order=asc')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toBeSortedBy('votes', {descending: false})
+        })
+    })
+    test('GET 400 returns bad request if trying to order by an invalid category', () => {
+        return request(app)
+        .get('/api/articles?sorted_by=body&order=sideways')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Invalid Input')
+        })
+    })
+    test('GET 200 returned articles are sorted by sorted_by query and ordered by order query and any additional queries are ignored', () => {
+        return request(app)
+        .get('/api/articles?sorted_by=votes&order=asc&notaquery=true')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toBeSortedBy('votes', {descending: false})
+        })
+    })
+})
 
+//do same for last 2 tests but for order by ascending descending
 
 
 
