@@ -401,7 +401,17 @@ describe('GET /api/articles (topic query)', () => {
     })
 })
 
-
+describe('GET /api/articles/:article_id (comment_count)', () => {
+    test('GET 200 an article response object should contain a comment_count property showing the total number of comments', () => {
+        return request(app)
+        .get('/api/articles/2')
+        .expect(200)
+        .then(({body}) =>{
+            console.log(body.article)
+            expect(body.article).toHaveProperty('comment_count', "0")
+        })
+    })
+})
 
 
 
