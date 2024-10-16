@@ -319,7 +319,7 @@ describe('GET /api/users',()=> {
     })
 })
 
-describe(' GET /api/articles (sortign queries)', () => {
+describe(' GET /api/articles (sorting queries)', () => {
     test('GET 200 returned articles are by default sorted by created_at desc', () => {
         return request(app)
         .get('/api/articles')
@@ -370,7 +370,38 @@ describe(' GET /api/articles (sortign queries)', () => {
     })
 })
 
-//do same for last 2 tests but for order by ascending descending
+describe('GET /api/articles (topic query)', () => {
+    test('GET 200 returns articles filtered by provided topic', () => {
+        return request(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({body}) => {
+            body.articles.forEach((article) => {
+                expect(article.topic).toBe('mitch')
+            })
+        })
+    })
+    test('GET 200 returns an empty array when provided a topic which has no articles', () => {
+        return request(app)
+        .get('/api/articles?topic=paper')
+        .expect(200)
+        .then(({body}) => {
+            expect(Array.isArray(body.articles)).toBe(true)
+            expect(body.articles).toHaveLength(0)
+            
+        })
+    })
+    test('GET 404 returns not found when given a topic that doesn\'t exist', () => {
+        return request(app)
+        .get('/api/articles?topic=notatopic')
+        .expect(404)
+        .then(({body}) => {            
+            expect(body.msg).toBe('Not Found')            
+        })
+    })
+})
+
+
 
 
 
