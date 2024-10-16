@@ -12,7 +12,15 @@ selectArticleById(article_id)
     })
 }
 
-exports.getAllArticles = (request, response, next) => {  
+exports.getAllArticles = (request, response, next) => { 
+    const validQueries = ['sorted_by', 'order', 'topic']
+    const queryKeys = Object.keys(request.query)    
+    if(queryKeys.length> 0){
+        queryKeys.forEach((query) => {
+        if(!validQueries.includes(query)){
+            next({status: 400, msg: "Bad Request"})
+        }
+    })}
     const {sorted_by, order, topic} = request.query
     const dbRequests = [selectAllArticles(sorted_by, order, topic), selectTopicBySlug(topic)]    
     Promise.all(dbRequests)
