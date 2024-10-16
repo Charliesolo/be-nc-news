@@ -11,8 +11,9 @@ selectArticleById(article_id)
     })
 }
 
-exports.getAllArticles = (request, response, next) => {    
-    selectAllArticles()
+exports.getAllArticles = (request, response, next) => {  
+    const {sorted_by, order} = request.query    
+    selectAllArticles(sorted_by, order)
     .then((articles) => {
         response.status(200).send({articles})
     })
