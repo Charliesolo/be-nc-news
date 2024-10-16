@@ -58,7 +58,7 @@ A list of all endpoints and their functions can be found [here](https://github.c
 
 ## Minimum Requirements
 
-In order to run this API you must have minimum version of node 6.9.0
+In order to run this API you must have minimum version of node of 6.9.0 and a minimum version of PSQL of 16.4
 
 --- 
 
