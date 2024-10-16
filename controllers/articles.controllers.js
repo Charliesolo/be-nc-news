@@ -1,4 +1,5 @@
 const { selectArticleById, selectAllArticles, updateArticlesVotes } = require("../models/articles.models")
+const { selectTopicBySlug } = require("../models/topics.models")
 
 exports.getArticleById = (request, response, next) => {
 const { article_id }= request.params
@@ -12,12 +13,13 @@ selectArticleById(article_id)
 }
 
 exports.getAllArticles = (request, response, next) => {  
-    const {sorted_by, order} = request.query    
-    selectAllArticles(sorted_by, order)
-    .then((articles) => {
+    const {sorted_by, order, topic} = request.query
+    const dbRequests = [selectAllArticles(sorted_by, order, topic), selectTopicBySlug(topic)]    
+    Promise.all(dbRequests)
+    .then(([articles, topicExists]) => {  
         response.status(200).send({articles})
     })
-    .catch((err) => {
+    .catch((err) => {        
         next(err)
     })
 }
