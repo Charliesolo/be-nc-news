@@ -2,7 +2,7 @@ const db = require('../db/connection')
 
 exports.selectArticleById = (article_id) => {
     return db.query(`
-        SELECT articles.author, title, articles.article_id, topic, articles.body, articles.votes, article_img_url, articles.created_at::varchar, COUNT(comments.comment_id) 
+        SELECT articles.author, title, articles.article_id, topic, articles.body, articles.votes, article_img_url, articles.created_at::varchar, COUNT(comments.comment_id)::INT 
         AS comment_count
         FROM articles
         LEFT JOIN comments
