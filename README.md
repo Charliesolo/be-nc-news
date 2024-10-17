@@ -54,7 +54,7 @@ In order to seed the development database run:
  > npm test app 
 
 ## Using the API
-A list of all endpoints and their functions can be found [here](https://github.com/Charliesolo/be-nc-news.git)
+A list of all endpoints and their functions can be found [here](https://charlies-nc-news.onrender.com/api)
 
 ## Minimum Requirements
 
