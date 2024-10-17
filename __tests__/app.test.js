@@ -602,15 +602,77 @@ describe('POST /api/articles', () => {
     })
 })
 
+describe('GET /api/articles (pagination)', () => {
+    test('GET 200 when no limit is set 10 articles are returned and body has total_count property showing total number of articles', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toHaveLength(10)
+            expect(body.articles[0]).toHaveProperty('total_count', 13)
+        })
+    })
+    test('GET 200 when a limit is set that number of articles is returned and body has total_count property showing total number of articles', () => {
+        return request(app)
+        .get('/api/articles?limit=5')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.articles).toHaveLength(5)
+            expect(body.articles[0]).toHaveProperty('total_count', 13)
+        })
+    })
+    test('GET 200 when a filtering query is set the total_count property shows total number of articles after any filters', () => {
+        return request(app)
+        .get('/api/articles?limit=5&topic=cats')
+        .expect(200)
+        .then(({body}) => {            
+            expect(body.articles[0]).toHaveProperty('total_count', 1)
+        })
+    })
+    test('GET 200 when p is set the returned articles are sent offset in relation to limit', () => {
+        return request(app)
+        .get('/api/articles?limit=5&sorted_by=article_id&order=asc&p=2')
+        .expect(200)
+        .then(({body}) => { 
+            let expectedId = 6           
+            body.articles.forEach((article) => {
+                expect(article.article_id).toBe(expectedId)
+                expectedId++
+            })
+        })
+    })
+    test('GET 400 returns bad request when given an invalid limit', () => {
+        return request(app)
+        .get('/api/articles?limit=not-a-valid-limit')
+        .expect(400)
+        .then(({body}) => { 
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('GET 400 returns bad request when given an invalid p', () => {
+        return request(app)
+        .get('/api/articles?p=not-a-valid-p')
+        .expect(400)
+        .then(({body}) => { 
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('GET 404 returns not found when given a p larger than the number of pages', () => {
+        return request(app)
+        .get('/api/articles?limit=5&p=100')
+        .expect(404)
+        .then(({body}) => { 
+            expect(body.msg).toBe('Not Found')
+        })
+    })
+})
 
 
 
 
 
 
-//400 if missing any elements (apart from img url)
-// 400 if topic doesn't exist
-// 400 if user doesn't exist
+
 
 
 

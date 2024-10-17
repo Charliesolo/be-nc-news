@@ -10,8 +10,8 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves an array of all articles which can be filtered by author or topic and can be sorted by any category using the sort_by query and the order query says whether to order them ASCending or DEScending. The limit query limits the number of responses (defaulted to 10) and the p query shows which page to start at (calculated using the limit)",
+    "queries": ["author", "topic", "sort_by", "order", "limit", "p"],
     "exampleResponse": {
       "articles": [
         {
@@ -22,10 +22,38 @@
           "votes": 0,
           "comment_count": 6,
           "article_id": 1,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "total count": 13
+
+        }
+      ]      
+    }
+  },
+  "POST /api/articles": {
+    "description": "takes a request body with author, title, body, topic and article_img_id (this one is optional) properties and posts a new article and returns the posted article complete with article_id, votes, created_at and comment count properties",
+    "queries": [],
+    "exampleRequestBody": {
+      "author": "rogersop",
+      "title": "Test Article",
+      "body": "This is a test article about cats",
+      "topic": "cats"
+      
+  },
+    "exampleResponse": {
+      "article": 
+        {
+          "title": "Test Article",
+          "topic": "cooking",
+          "author": "rogersop",
+          "body": "This is a test article about cats",
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "votes": 0,
+          "comment_count": 0,
+          "article_id": 19,
           "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
 
         }
-      ]
+      
     }
   },
   "GET /api/articles/:article_id": {
