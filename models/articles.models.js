@@ -20,29 +20,45 @@ exports.selectArticleById = (article_id) => {
         })
 }
 
-exports.selectAllArticles = (sorted_by = 'created_at', order='desc', topic) => {
+exports.selectAllArticles = (sorted_by = 'created_at', order='desc', topic, limit = 10, p) => {
     const allowedSortCategories = ['author', 'title', 'article_id', 'topic', 'votes', 'article_img_url', 'comment_count', 'created_at' ]
     const allowedOrders = ['asc', 'desc']
     if (!allowedSortCategories.includes(sorted_by) || !allowedOrders.includes(order)){
         return Promise.reject({status:400, msg:'Invalid Input' })
     }
-    const queryValues = []
+    const queryValues = [limit]
     let queryStr = `
         SELECT articles.author, title, articles.article_id, topic, articles.created_at::varchar, articles.votes, article_img_url, COUNT(comments.comment_id) 
-        AS comment_count
+            AS comment_count,
+        COUNT(*) OVER()::integer AS total_count          
         FROM articles
         LEFT JOIN comments
         ON articles.article_id = comments.article_id `  
         if(topic){
             queryValues.push(topic)
-            queryStr += `WHERE topic = $1 `
+            queryStr += `WHERE topic = $2 `
         }
         
     queryStr += `
         GROUP BY articles.author, title, articles.article_id, topic, articles.created_at::varchar, articles.votes, article_img_url
-        ORDER BY ${sorted_by} ${order}`    
+        ORDER BY ${sorted_by} ${order}
+        LIMIT $1        
+        `
+    if(p){
+        if(isNaN(p)){
+            return Promise.reject({status: 400, msg: 'Bad Request'})
+        }
+        if(p>1){
+        const offsetValue = (p-1)*limit
+        queryValues.push(offsetValue)
+        queryStr += `OFFSET $${queryValues.length}`
+        }
+    }    
     return db.query(queryStr, queryValues )
-        .then(({rows}) => {                             
+        .then(({rows}) => {
+            if(p && rows.length === 0){
+                return Promise.reject({msg:"Not Found", status:404})
+            }
             return rows
         })
 }

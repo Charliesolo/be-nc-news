@@ -14,7 +14,7 @@ selectArticleById(article_id)
 }
 
 exports.getAllArticles = (request, response, next) => { 
-    const validQueries = ['sorted_by', 'order', 'topic']
+    const validQueries = ['sorted_by', 'order', 'topic', 'limit', 'p' ]
     const queryKeys = Object.keys(request.query)    
     if(queryKeys.length> 0){
         queryKeys.forEach((query) => {
@@ -22,10 +22,10 @@ exports.getAllArticles = (request, response, next) => {
             next({status: 400, msg: "Bad Request"})
         }
     })}
-    const {sorted_by, order, topic} = request.query
-    const dbRequests = [selectAllArticles(sorted_by, order, topic), selectTopicBySlug(topic)]    
+    const {sorted_by, order, topic, limit, p} = request.query
+    const dbRequests = [selectAllArticles(sorted_by, order, topic, limit, p), selectTopicBySlug(topic)]    
     Promise.all(dbRequests)
-    .then(([articles, topicExists]) => {  
+    .then(([articles, topicExists]) => {       
         response.status(200).send({articles})
     })
     .catch((err) => {        
