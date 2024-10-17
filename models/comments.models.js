@@ -1,13 +1,31 @@
 const db = require('../db/connection')
 const { convertTimestampToDate } = require('../db/seeds/utils')
 
-exports.selectCommentsByArticleId = (article_id) => {
-    return db.query(`
+exports.selectCommentsByArticleId = (article_id, limit=10, p) => {
+    
+    let queryStr = `
         SELECT comment_id, votes, created_at::varchar, author, body, article_id
         FROM comments
         WHERE article_id = $1
-        ORDER BY created_at DESC`, [article_id])
-        .then(({rows}) => {            
+        ORDER BY created_at DESC
+        LIMIT $2
+        `
+    const queryValues = [article_id, limit]
+    if(p){
+        if(isNaN(p)){
+            return Promise.reject({status: 400, msg: 'Bad Request'})
+        }        
+        if(p>1){
+        const offsetValue = (p-1)*limit        
+        queryValues.push(offsetValue)
+        queryStr += `OFFSET $${queryValues.length}`
+        }
+    }
+    return db.query(queryStr, queryValues)
+        .then(({rows}) => {
+            if(p && rows.length === 0){
+                return Promise.reject({status: 404, msg:'Not Found'})
+            }            
             return rows
         })
 }

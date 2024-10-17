@@ -56,7 +56,7 @@ exports.selectAllArticles = (sorted_by = 'created_at', order='desc', topic, limi
     }    
     return db.query(queryStr, queryValues )
         .then(({rows}) => {
-            if(p && rows.length === 0){
+            if(p>1 && rows.length === 0){
                 return Promise.reject({msg:"Not Found", status:404})
             }
             return rows
