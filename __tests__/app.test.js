@@ -667,12 +667,64 @@ describe('GET /api/articles (pagination)', () => {
     })
 })
 
+describe('GET /api/articles/:article_id/comments (pagination)', () => {
+    test('GET 200 when no limit is set 10 comments are returned', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toHaveLength(10)
+        })
+    })
+    test('GET 200 when a limit is set that number of comments are returned', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=5')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comments).toHaveLength(5)
+        })
+    })
+    test('GET 200 when p is set the returned comments are sent offset in relation to limit', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=5&p=3')
+        .expect(200)
+        .then(({body}) => {
+            
+            expect(body.comments).toHaveLength(1)
+        })
+    })
+    test('GET 400 returns bad request when given an invalid limit', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=not-a-limit&p=3')
+        .expect(400)
+        .then(({body}) => {
+            
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('GET 400 returns bad request when given an invalid p', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=5&p=not-a-p')
+        .expect(400)
+        .then(({body}) => {
+            
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('GET 404 returns Not Found when given a p larger than the number of pages', () => {
+        return request(app)
+        .get('/api/articles/1/comments?limit=5&p=20')
+        .expect(404)
+        .then(({body}) => {
+            
+            expect(body.msg).toBe('Not Found')
+        })
+    })
+})
 
 
 
 
 
 
-
-
-
+//     ✓ GET 404 returns not found when given a p larger than the number of pages (27 ms)

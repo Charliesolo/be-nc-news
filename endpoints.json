@@ -74,8 +74,8 @@
     }    
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "serves an array containing all comments associated with an article as selected by the provided article id",
-    "queries": [],
+    "description": "serves an array containing all comments associated with an article as selected by the provided article id. The limit query limits the number of responses (defaulted to 10) and the p query shows which page to start at (calculated using the limit)",
+    "queries": ["limit", "p"],
     "exampleResponse": {
       "comments": [{
         "comment_id": 1,
