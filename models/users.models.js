@@ -12,8 +12,7 @@ exports.selectUserByUsername = (username) => {
     return db.query(`
         SELECT * FROM users
         WHERE username = $1`, [username])
-        .then(({rows}) => {
-            console.log(rows)
+        .then(({rows}) => {            
             if(rows.length < 1){
                 return Promise.reject({msg: 'User not found', status: 404 })
             }
