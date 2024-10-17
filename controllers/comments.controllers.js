@@ -1,5 +1,5 @@
 const { selectArticleById } = require("../models/articles.models")
-const { selectCommentsByArticleId, addComment, removeCommentById, selectCommentById } = require("../models/comments.models")
+const { selectCommentsByArticleId, addComment, removeCommentById, selectCommentById, updateCommentsVotes } = require("../models/comments.models")
 
 exports.getCommentsByArticleId = (request, response, next) => {
     const {article_id} = request.params
@@ -34,4 +34,17 @@ exports.deleteCommentById = (request, response, next) => {
     .catch((err) => {
         next(err)
     })
+}
+
+exports.patchCommentByID = (request, response, next) => {  
+    const {comment_id} = request.params
+    const {inc_votes} = request.body
+    updateCommentsVotes(comment_id, inc_votes)
+    .then((comment) => {
+        response.status(200).send({comment})
+    })
+    .catch((err) => {
+        next(err)
+    })
+
 }

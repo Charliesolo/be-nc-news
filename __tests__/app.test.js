@@ -208,9 +208,9 @@ describe('POST /api/articles/:article_id/comments', () => {
     })
     test('POST 404 returns an error of not found when given a valid article id for an article that doesn\'t exist', () => {
         return request(app)
-        .post('/api/articles/9999/comments')
+        .post('/api/articles/99999/comments')
         .expect(404)
-        .send({username: "butter_bridge", body: "test comment"})
+        .send({username: "rogersop", body: "test comment"})
         .then(({body}) => {
             expect(body.msg).toBe('Article Not Found')
         })        
@@ -263,7 +263,7 @@ describe('PATCH /api/articles/:article_id', () => {
             expect(body.msg).toBe('Bad Request')
         })
     })
-    test('PATCH 404 returns Not Found when given an valid article id for an article that doesn\'t exist', () => {
+    test('PATCH 404 returns Not Found when given a valid article id for an article that doesn\'t exist', () => {
         return request(app)
         .patch('/api/articles/9999')
         .expect(404)
@@ -432,4 +432,59 @@ describe('GET /api/users/:username', () => {
         })
     })
 })
+
+describe('PATCH /api/comments/:comment_id', () => {
+    test('PATCH 200 increases the votes of a given comment by the value provided in the body and returns the updated comment', () => {
+        return request(app)
+        .patch('/api/comments/5')
+        .send({inc_votes: 5})
+        .expect(200)
+        .then(({body}) => {
+            expect(body.comment).toHaveProperty('votes', 5)
+        })
+    })
+    test('PATCH 400 returns bad request when given a body without the correct key', ()=> {
+        return request(app)
+        .patch('/api/comments/5')
+        .send({})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('PATCH 400 returns bad request when given a body with the correct key but invalid fields', ()=> {
+        return request(app)
+        .patch('/api/comments/5')
+        .send({inc_votes: "string"})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('PATCH 400 returns bad request when given an invalid article id', ()=> {
+        return request(app)
+        .patch('/api/comments/not-an-id')
+        .send({inc_votes: 5})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+        })
+    })
+    test('PATCH 404 returns Not Found when given a valid article id for an article that doesn\'t exist', ()=> {
+        return request(app)
+        .patch('/api/comments/98765')
+        .send({inc_votes: 5})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('Comment Not Found')
+        })
+    })
+})
+
+
+
+
+
+
+
 

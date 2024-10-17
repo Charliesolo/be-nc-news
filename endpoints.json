@@ -96,6 +96,20 @@
     "description": "deletes a given comment and responds with a status code of 204 but no content",
     "queries": []
   },
+  "PATCH /api/comments/:comment_id": {
+  "description": "Updates a comment vote count by the amount provided (positive or negative numbers accepted)and returns the comment",
+    "exampleRequestBody": {"inc_votes": 5},
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 5,
+        "body": "I hate streaming noses",
+        "article_id": 1,
+        "author": "icellusedkars",
+        "votes": 5,
+        "created_at": "2020-11-03T21:00:00.000Z"
+      }
+  }},
   "GET /api/users": {
     "description": "serves an array of all users",
     "queries": [],
@@ -121,3 +135,5 @@
     }
   }
 }
+
+
