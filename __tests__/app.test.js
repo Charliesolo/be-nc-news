@@ -206,15 +206,6 @@ describe('POST /api/articles/:article_id/comments', () => {
             expect(body.msg).toBe('Bad Request')
         })        
     })
-    test('POST 404 returns an error of not found when given a valid article id for an article that doesn\'t exist', () => {
-        return request(app)
-        .post('/api/articles/99999/comments')
-        .expect(404)
-        .send({username: "rogersop", body: "test comment"})
-        .then(({body}) => {
-            expect(body.msg).toBe('Article Not Found')
-        })        
-    })
     test('POST 400 returns an error of bad request when given a username of a user that doesn\'t exist', () => {
         return request(app)
         .post('/api/articles/2/comments')
@@ -222,6 +213,15 @@ describe('POST /api/articles/:article_id/comments', () => {
         .send({username: "tequila_sunset", body: "This is very disco"})
         .then(({body}) => {
             expect(body.msg).toBe('Bad Request')
+        })        
+    })
+    test('POST 404 returns an error of not found when given a valid article id for an article that doesn\'t exist', () => {
+        return request(app)
+        .post('/api/articles/99999/comments')
+        .expect(404)
+        .send({username: "rogersop", body: "test comment"})
+        .then(({body}) => {
+            expect(body.msg).toBe('Article Not Found')
         })        
     })
 })
