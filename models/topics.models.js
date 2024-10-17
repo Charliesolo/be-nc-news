@@ -15,7 +15,7 @@ exports.selectTopicBySlug = (topic) => {
         `, [topic])
         .then(({rows}) =>{    
             if(rows.length < 1){  
-                return Promise.reject({status: 404, msg: "Not Found" })}
+                return Promise.reject({status: 404, msg: "Topic Not Found" })}
             return rows
         })
 

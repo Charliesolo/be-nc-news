@@ -15,7 +15,7 @@ exports.selectCommentsByArticleId = (article_id) => {
 exports.addComment = (article_id, username, body) => {
     
     if(!username || !body){
-        return Promise.reject({status: 400, msg: 'Bad Request'})
+        return Promise.reject({status: 400, msg: 'Bad Request - Username and body required'})
     }
     return db.query(`INSERT INTO comments
             (article_id, author, body)
@@ -42,7 +42,7 @@ exports.selectCommentById = (comment_id) => {
         .then(({rows}) => {
             if(rows.length < 1){                
                 return Promise.reject(
-                    {status: 404 , msg: 'Not Found'}
+                    {status: 404 , msg: 'Comment Not Found'}
                 )
             }                       
             return rows[0]

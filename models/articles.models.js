@@ -13,7 +13,7 @@ exports.selectArticleById = (article_id) => {
         .then(({rows}) => {            
             if(rows.length < 1){                
                 return Promise.reject(
-                    {status: 404 , msg: 'Not Found'}
+                    {status: 404 , msg: 'Article Not Found'}
                 )
             }                       
             return rows[0]
@@ -56,7 +56,7 @@ exports.updateArticlesVotes = (article_id, inc_votes) => {
         RETURNING *`, [inc_votes, article_id])
         .then(({rows}) => {            
             if(rows.length < 1){
-                return Promise.reject({status: 404, msg: "Not Found" })
+                return Promise.reject({status: 404, msg: "Article Not Found" })
             }
             return rows[0]
         })
