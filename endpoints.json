@@ -107,5 +107,17 @@
           "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'"
       }]
     }
+  },
+  "GET /api/users/:username": {
+    "description": "serves an object containign a single user as selected by the username",
+    "queries": [],
+    "exampleResponse": {
+      "topics": {
+        "username": "butter_bridge",
+        "name": "jonny",
+        "avatar_url":
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'"
+      }
+    }
   }
 }
