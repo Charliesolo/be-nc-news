@@ -1,4 +1,5 @@
-const { selectArticleById, selectAllArticles, updateArticlesVotes } = require("../models/articles.models")
+const { response } = require("../app")
+const { selectArticleById, selectAllArticles, updateArticlesVotes, addArticle } = require("../models/articles.models")
 const { selectTopicBySlug } = require("../models/topics.models")
 
 exports.getArticleById = (request, response, next) => {
@@ -42,5 +43,16 @@ exports.patchArticleByID = (request, response, next) => {
     .catch((err) => {        
         next(err)
     })
+}
+
+exports.postArticle = (request, response, next) => {
+const {author, title, body, topic, article_img_url} = request.body
+addArticle(author, title, body, topic, article_img_url)
+.then((article) => {    
+    response.status(201).send({article})
+})
+.catch((err) => {
+    next(err)
+})
 }
 
