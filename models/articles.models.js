@@ -28,7 +28,7 @@ exports.selectAllArticles = (sorted_by = 'created_at', order='desc', topic, limi
     }
     const queryValues = [limit]
     let queryStr = `
-        SELECT articles.author, title, articles.article_id, topic, articles.created_at::varchar, articles.votes, article_img_url, COUNT(comments.comment_id) 
+        SELECT articles.author, title, articles.article_id, topic, articles.created_at::varchar, articles.votes, article_img_url, COUNT(comments.comment_id)::INT 
             AS comment_count,
         COUNT(*) OVER()::integer AS total_count          
         FROM articles

@@ -111,7 +111,7 @@ describe('GET /api/articles', () => {
             .get('/api/articles')
             .expect(200)
             .then(({body}) => {
-                expect(body.articles[0]).toHaveProperty('comment_count', "2")
+                expect(body.articles[0]).toHaveProperty('comment_count', 2)
             })
     })
 })
