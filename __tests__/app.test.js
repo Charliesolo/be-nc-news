@@ -75,7 +75,7 @@ describe('GET /api/articles/:article_id', () => {
             .get('/api/articles/99999')
             .expect(404)
             .then(({body})=> {
-                expect(body.msg).toBe('Not Found')                
+                expect(body.msg).toBe('Article Not Found')                
             })
     })
 })
@@ -153,7 +153,7 @@ describe('GET /api/articles/:article_id/comments', () => {
         .get('/api/articles/9999/comments')
         .expect(404)
         .then(({body}) => {
-            expect(body.msg).toBe('Not Found')
+            expect(body.msg).toBe('Article Not Found')
         })
     })
     test('GET: 200 responds with an empty array when given a valid article that has no comments', () => {
@@ -194,7 +194,7 @@ describe('POST /api/articles/:article_id/comments', () => {
         .expect(400)
         .send({ body: "test comment"})
         .then(({body}) => {
-            expect(body.msg).toBe('Bad Request')
+            expect(body.msg).toBe('Bad Request - Username and body required')
         })        
     })
     test('POST 400 returns an error of bad request when given an invalid article id', () => {
@@ -212,7 +212,7 @@ describe('POST /api/articles/:article_id/comments', () => {
         .expect(404)
         .send({username: "butter_bridge", body: "test comment"})
         .then(({body}) => {
-            expect(body.msg).toBe('Not Found')
+            expect(body.msg).toBe('Article Not Found')
         })        
     })
     test('POST 400 returns an error of bad request when given a username of a user that doesn\'t exist', () => {
@@ -269,7 +269,7 @@ describe('PATCH /api/articles/:article_id', () => {
         .expect(404)
         .send({inc_votes: 5})
         .then(({body}) => {
-            expect(body.msg).toBe('Not Found')
+            expect(body.msg).toBe('Article Not Found')
         })
     })
 })
@@ -299,7 +299,7 @@ describe('DELETE /api/comments/:comment_id', () => {
         .delete('/api/comments/9999')
         .expect(404)        
         .then(({body}) => {
-            expect(body.msg).toBe('Not Found')
+            expect(body.msg).toBe('Comment Not Found')
         })
     })
 })
@@ -396,7 +396,7 @@ describe('GET /api/articles (topic query)', () => {
         .get('/api/articles?topic=notatopic')
         .expect(404)
         .then(({body}) => {            
-            expect(body.msg).toBe('Not Found')            
+            expect(body.msg).toBe('Topic Not Found')            
         })
     })
 })
@@ -412,5 +412,24 @@ describe('GET /api/articles/:article_id (comment_count)', () => {
     })
 })
 
-
+describe('GET /api/users/:username', () => {
+    test('GET 200 responds with a user object which should have  a username, avatar_url and name properties', () => {
+        return request(app)
+        .get('/api/users/lurker')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.user).toHaveProperty('username', 'lurker')
+            expect(body.user).toHaveProperty('name', 'do_nothing')
+            expect(body.user).toHaveProperty('avatar_url', 'https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png')
+        })
+    })
+    test('GET 404 responds with user not found when given the username of a user that doesn\'t exist', () => {
+        return request(app)
+        .get('/api/users/notauser')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('User not found')
+        })
+    })
+})
 
