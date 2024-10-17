@@ -481,10 +481,136 @@ describe('PATCH /api/comments/:comment_id', () => {
     })
 })
 
+describe('POST /api/articles', () => {
+    test('POST 201 posts an article and responds with the new article with the correct properties', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: 'rogersop',
+            title: 'Test Article',
+            body: 'This is a test article about cats',
+            topic: 'cats',
+            article_img_url: 'https://en.wikipedia.org/wiki/Cat#/media/File:Cat_August_2010-4.jpg'
+        })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.article).toHaveProperty('author')
+            expect(body.article).toHaveProperty('title')
+            expect(body.article).toHaveProperty('body')
+            expect(body.article).toHaveProperty('topic')
+            expect(body.article).toHaveProperty('article_img_url')
+            expect(body.article).toHaveProperty('article_id')
+            expect(body.article).toHaveProperty('votes')
+            expect(body.article).toHaveProperty('created_at')
+            expect(body.article).toHaveProperty('comment_count')
+        })
+    })
+    test('POST 201 posts an article and responds with the new article with the using the default img_url if none provided', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: 'rogersop',
+            title: 'Test Article',
+            body: 'This is a test article about cats',
+            topic: 'cats'
+            
+        })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.article).toHaveProperty('author')
+            expect(body.article).toHaveProperty('title')
+            expect(body.article).toHaveProperty('body')
+            expect(body.article).toHaveProperty('topic')
+            expect(body.article).toHaveProperty('article_img_url', 'https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700')
+            expect(body.article).toHaveProperty('article_id')
+            expect(body.article).toHaveProperty('votes')
+            expect(body.article).toHaveProperty('created_at')
+            expect(body.article).toHaveProperty('comment_count')
+        })
+    })
+    test('POST 201 adding extraneous elements to the request body still results in successfully posting the article', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: 'rogersop',
+            title: 'Test Article',
+            body: 'This is a test article about cats',
+            topic: 'cats',
+            additional_info: 'test data'
+            
+        })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.article).toHaveProperty('author')
+            expect(body.article).toHaveProperty('title')
+            expect(body.article).toHaveProperty('body')
+            expect(body.article).toHaveProperty('topic')
+            expect(body.article).toHaveProperty('article_img_url', 'https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700')
+            expect(body.article).toHaveProperty('article_id')
+            expect(body.article).toHaveProperty('votes')
+            expect(body.article).toHaveProperty('created_at')
+            expect(body.article).toHaveProperty('comment_count')
+        })
+    })
+    test('POST 400 responds with bad request if any required elements are missing from the request body', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: 'rogersop',            
+            body: 'This is a test article about cats',
+            topic: 'cats',
+            additional_info: 'test data'
+            
+        })
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+            
+        })
+    })
+    test('POST 400 responds with bad request if non existent author is provided', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: 'testAuthor',
+            title: 'Test Article',
+            body: 'This is a test article about cats',
+            topic: 'cats',
+            additional_info: 'test data'            
+        })
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+            
+        })
+    })
+    test('POST 400 responds with bad request if non existent topic is provided', () => {
+        return request(app)
+        .post('/api/articles')
+        .send({
+            author: 'rogersop',
+            title: 'Test Article',
+            body: 'This is a test article about cats',
+            topic: 'testing',
+            additional_info: 'test data'            
+        })
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')
+            
+        })
+    })
+})
 
 
 
 
+
+
+
+//400 if missing any elements (apart from img url)
+// 400 if topic doesn't exist
+// 400 if user doesn't exist
 
 
 

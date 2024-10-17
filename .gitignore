@@ -1,3 +1,5 @@
 node_modules
 .env.*
 dbpassword.txt
+output.txt
+test.sql

@@ -62,3 +62,54 @@ exports.updateArticlesVotes = (article_id, inc_votes) => {
         })
 }
 
+exports.addArticle = (author, title, body, topic, article_img_url) => {
+    const inputValues = [author, title, body, topic]
+    let queryStr = ``
+    if (article_img_url){
+        inputValues.push(article_img_url)
+        queryStr += `WITH posted_article AS 
+        (
+        INSERT INTO articles
+            (author, title, body, topic, article_img_url)
+        VALUES
+            ($1, $2, $3, $4, $5)`
+    } else {
+        queryStr += `WITH posted_article AS 
+        (
+        INSERT INTO articles
+            (author, title, body, topic)
+        VALUES
+            ($1, $2, $3, $4)`
+    }
+    queryStr += `
+    RETURNING article_id, author, title, body, topic, created_at, votes, article_img_url
+    )
+    SELECT 
+        posted_article.author, 
+        posted_article.title, 
+        posted_article.article_id, 
+        posted_article.body, 
+        posted_article.topic, 
+        posted_article.created_at::varchar, 
+        posted_article.votes, 
+        posted_article.article_img_url, 
+    COUNT(comments.comment_id) AS comment_count
+    FROM posted_article
+    LEFT JOIN comments
+    ON posted_article.article_id = comments.article_id
+    GROUP BY 
+        posted_article.author, 
+        posted_article.title, 
+        posted_article.article_id, 
+        posted_article.body, 
+        posted_article.topic, 
+        posted_article.created_at::varchar, 
+        posted_article.votes, 
+        posted_article.article_img_url ;`    
+    return db.query(queryStr,inputValues)
+        .then(({rows}) => {       
+            return rows[0]
+        })
+
+}
+
