@@ -127,6 +127,10 @@
       }
     }    
   },
+  "DELETE /api/articles/:article_id": {
+    "description": "deletes a given article and all associated comments and responds with a status code of 204 but no content",
+    "queries": []
+  },
   "DELETE /api/comments/:comment_id": {
     "description": "deletes a given comment and responds with a status code of 204 but no content",
     "queries": []

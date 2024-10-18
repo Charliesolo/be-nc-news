@@ -1,5 +1,5 @@
-const { response } = require("../app")
-const { selectArticleById, selectAllArticles, updateArticlesVotes, addArticle } = require("../models/articles.models")
+const { response, request } = require("../app")
+const { selectArticleById, selectAllArticles, updateArticlesVotes, addArticle, removeArticleById } = require("../models/articles.models")
 const { selectTopicBySlug } = require("../models/topics.models")
 
 exports.getArticleById = (request, response, next) => {
@@ -54,5 +54,16 @@ addArticle(author, title, body, topic, article_img_url)
 .catch((err) => {
     next(err)
 })
+}
+
+exports.deleteArticleByID = (request, response, next) => {
+    const {article_id} = request.params
+    Promise.all([removeArticleById(article_id), selectArticleById(article_id)])
+    .then(() => {
+        response.status(204).send()
+    })
+    .catch((err) => {
+        next(err)
+    })
 }
 

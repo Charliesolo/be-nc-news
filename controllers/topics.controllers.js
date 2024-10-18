@@ -17,8 +17,7 @@ exports.postTopic = (request, response, next) => {
     .then((topic) => {
         response.status(201).send({topic})
     })
-    .catch((err) => {
-        console.log(err)
+    .catch((err) => {        
         next(err)
     })
 }

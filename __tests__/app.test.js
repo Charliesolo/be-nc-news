@@ -762,6 +762,52 @@ describe('POST /api/topics', () => {
     })
 })
 
+describe('DELETE /api/articles/:article_id', () => {
+    test('DELETE 204 deletes a given article and any associated comments', () => {
+        return request(app)
+        .delete('/api/articles/6')
+        .expect(204)
+        .then(() => {
+            return db.query(`
+                SELECT * FROM articles
+                WHERE article_id = 6;
+                `)                
+        })
+        .then(({rows}) => {
+            expect(rows).toHaveLength(0)
+        })
+        .then(() => {
+            return db.query(`
+                SELECT * FROM comments
+                WHERE article_id = 6;
+                `)                
+        })
+        .then(({rows}) => {
+            expect(rows).toHaveLength(0)
+        })
+    })
+    test('DELETE 400 returns bad request when given an invalid article_id', () => {
+        return request(app)
+        .delete('/api/articles/not-an-id')
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')               
+        })        
+    })
+    test('DELETE 404 returns Not Found when given a valid article_id for an article that doesn\'t exist', () => {
+        return request(app)
+        .delete('/api/articles/55555')
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe('Article Not Found')               
+        })        
+    })
+})
+
+
+//     ✓ DELETE 400 returns Bad Request when given an invalid article id (28 ms)
+//     ✓ DELETE 404 returns Not Found when given the id of a comment that doesn't exist (60 ms
+
 
 
 
