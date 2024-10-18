@@ -5,8 +5,6 @@ const seed = require('../db/seeds/seed.js');
 const testData = require('../db/data/test-data/index.js');
 const endpoints = require('../endpoints.json')
 
-
-
 beforeEach(() => seed(testData));
 afterAll(() => db.end())
 
@@ -765,12 +763,12 @@ describe('POST /api/topics', () => {
 describe('DELETE /api/articles/:article_id', () => {
     test('DELETE 204 deletes a given article and any associated comments', () => {
         return request(app)
-        .delete('/api/articles/6')
+        .delete('/api/articles/7')
         .expect(204)
         .then(() => {
             return db.query(`
                 SELECT * FROM articles
-                WHERE article_id = 6;
+                WHERE article_id = 7;
                 `)                
         })
         .then(({rows}) => {
@@ -779,7 +777,7 @@ describe('DELETE /api/articles/:article_id', () => {
         .then(() => {
             return db.query(`
                 SELECT * FROM comments
-                WHERE article_id = 6;
+                WHERE article_id = 7;
                 `)                
         })
         .then(({rows}) => {
@@ -803,11 +801,6 @@ describe('DELETE /api/articles/:article_id', () => {
         })        
     })
 })
-
-
-//     ✓ DELETE 400 returns Bad Request when given an invalid article id (28 ms)
-//     ✓ DELETE 404 returns Not Found when given the id of a comment that doesn't exist (60 ms
-
 
 
 

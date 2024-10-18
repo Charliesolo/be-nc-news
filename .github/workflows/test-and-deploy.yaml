@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    name: Test
+    name: Set up process
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repo
@@ -29,6 +29,6 @@ jobs:
       run: npm ci
 
     - name: Run tests
-      run: PGDATABASE=my_db PGUSER=test_user PGPASSWORD=test_password npm test --runInBand
+      run: PGDATABASE=my_db PGUSER=test_user PGPASSWORD=test_password npm test 
 
 
