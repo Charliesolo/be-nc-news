@@ -762,7 +762,7 @@ describe('POST /api/topics', () => {
     })
 })
 
-describe('DELETE /api/articles/:article_id', () => {
+describe.only('DELETE /api/articles/:article_id', () => {
     test('DELETE 204 deletes a given article and any associated comments', () => {
         return request(app)
         .delete('/api/articles/6')
