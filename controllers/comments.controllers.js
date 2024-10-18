@@ -1,4 +1,4 @@
-const { selectArticleById } = require("../models/articles.models")
+const { selectArticleById, checkArticleExist } = require("../models/articles.models")
 const { selectCommentsByArticleId, addComment, removeCommentById, selectCommentById, updateCommentsVotes } = require("../models/comments.models")
 
 exports.getCommentsByArticleId = (request, response, next) => {
@@ -16,7 +16,7 @@ exports.getCommentsByArticleId = (request, response, next) => {
 exports.postComment = (request, response, next) => {
     const {article_id} = request.params
     const {username , body} = request.body
-    return Promise.all([selectArticleById(article_id), addComment(article_id, username, body)])   
+    return Promise.all([checkArticleExist(article_id), addComment(article_id, username, body)])   
     .then((resolvedPromises) => {
         const comment = resolvedPromises[1]
         response.status(201).send({comment})
