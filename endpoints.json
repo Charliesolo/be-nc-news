@@ -14,7 +14,7 @@
     "queries": [],
     "exampleRequestBody": {
       "slug": "dogs",
-      "description": "Not Cats"      
+      "description": "Not Cats"}      
   },
   "GET /api/articles": {
     "description": "serves an array of all articles which can be filtered by author or topic and can be sorted by any category using the sort_by query and the order query says whether to order them ASCending or DEScending. The limit query limits the number of responses (defaulted to 10) and the p query shows which page to start at (calculated using the limit)",
