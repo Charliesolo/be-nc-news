@@ -31,4 +31,7 @@ jobs:
     - name: Run tests
       run: PGDATABASE=my_db PGUSER=test_user PGPASSWORD=test_password npm test utils
 
+    - name: Run tests
+      run: PGDATABASE=my_db PGUSER=test_user PGPASSWORD=test_password npm test app
+
 
