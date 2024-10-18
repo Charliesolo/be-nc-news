@@ -52,10 +52,11 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       CREATE TABLE comments (
         comment_id SERIAL PRIMARY KEY,
         body VARCHAR NOT NULL,
-        article_id INT REFERENCES articles(article_id) NOT NULL,
+        article_id INT REFERENCES articles ON DELETE CASCADE,        
         author VARCHAR REFERENCES users(username) NOT NULL,
         votes INT DEFAULT 0 NOT NULL,
-        created_at TIMESTAMP DEFAULT NOW()
+        created_at TIMESTAMP DEFAULT NOW(),
+        FOREIGN KEY (article_id) REFERENCES articles(article_id) ON DELETE CASCADE
       );`);
     })
     .then(() => {
