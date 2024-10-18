@@ -1,14 +1,14 @@
 name: Test & Deploy
 
 on:
-  push:
+  pull:
     branches:
       - main
 
 jobs:
   test:
     name: Test
-    runs on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v4
