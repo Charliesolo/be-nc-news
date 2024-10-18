@@ -23,7 +23,7 @@ exports.selectCommentsByArticleId = (article_id, limit=10, p) => {
     }
     return db.query(queryStr, queryValues)
         .then(({rows}) => {
-            if(p && rows.length === 0){
+            if(p>1 && rows.length === 0){
                 return Promise.reject({status: 404, msg:'Not Found'})
             }            
             return rows
