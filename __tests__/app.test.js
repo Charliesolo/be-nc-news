@@ -217,7 +217,7 @@ describe('POST /api/articles/:article_id/comments', () => {
     })
     test('POST 404 returns an error of not found when given a valid article id for an article that doesn\'t exist', () => {
         return request(app)
-        .post('/api/articles/99999/comments')
+        .post('/api/articles/999989/comments')
         .expect(404)
         .send({username: "rogersop", body: "test comment"})
         .then(({body}) => {
