@@ -9,6 +9,13 @@
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
+  "POST /api/topics": {
+    "description": "takes a request body with slug and description properties and posts a new topic and returns the posted topic",
+    "queries": [],
+    "exampleRequestBody": {
+      "slug": "dogs",
+      "description": "Not Cats"      
+  },
   "GET /api/articles": {
     "description": "serves an array of all articles which can be filtered by author or topic and can be sorted by any category using the sort_by query and the order query says whether to order them ASCending or DEScending. The limit query limits the number of responses (defaulted to 10) and the p query shows which page to start at (calculated using the limit)",
     "queries": ["author", "topic", "sort_by", "order", "limit", "p"],
