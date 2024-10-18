@@ -721,10 +721,47 @@ describe('GET /api/articles/:article_id/comments (pagination)', () => {
         })
     })
 })
+describe('POST /api/topics', () => {
+    test('POST 201 posts a topic and responds with the new article with the correct properties', () => {
+        return request(app)
+        .post('/api/topics')
+        .send({slug: "New Topic!", description: "This is the new topic I wish to post."})
+        .expect(201)
+        .then(({body}) => {
+            expect(body.topic).toHaveProperty('slug', 'New Topic!')
+            expect(body.topic).toHaveProperty('description', "This is the new topic I wish to post.")
+        })
+    })
+    test('POST 201 adding extraneous elements to the request body still results in successfully posting the article', () => {
+        return request(app)
+        .post('/api/topics')
+        .send({slug: "New Topic!", description: "This is the new topic I wish to post.", comment: "this shouldn't be here"})
+        .expect(201)
+        .then(({body}) => {
+            expect(body.topic).toHaveProperty('slug', 'New Topic!')
+            expect(body.topic).toHaveProperty('description', "This is the new topic I wish to post.")
+        })
+    })
+    test('POST 400 responds with bad request if any required elements are missing from the request body', () => {
+        return request(app)
+        .post('/api/topics')
+        .send({slug: "New Topic!" })
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request - Slug and Description required')            
+        })
+    })
+    test('POST 400 responds with bad request if topic already exists (based on slug)', () => {
+        return request(app)
+        .post('/api/topics')
+        .send({slug: "cats", description: "feline friends" })
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Bad Request')            
+        })
+    })
+})
 
 
 
 
-
-
-//     ✓ GET 404 returns not found when given a p larger than the number of pages (27 ms)
