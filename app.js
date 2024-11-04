@@ -8,6 +8,9 @@ const { getCommentsByArticleId, postComment, deleteCommentById } = require('./co
 const { getAllUsers } = require('./controllers/users.controllers');
 const apiRouter = require("./routers/api-router");
 
+const cors = require('cors')
+
+app.use(cors())
 
 app.use(express.json())
 
