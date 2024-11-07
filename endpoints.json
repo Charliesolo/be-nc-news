@@ -37,7 +37,7 @@
     }
   },
   "POST /api/articles": {
-    "description": "takes a request body with author, title, body, topic and article_img_id (this one is optional) properties and posts a new article and returns the posted article complete with article_id, votes, created_at and comment count properties",
+    "description": "takes a request body with author, title, body, topic and article_img_url (this one is optional) properties and posts a new article and returns the posted article complete with article_id, votes, created_at and comment count properties",
     "queries": [],
     "exampleRequestBody": {
       "author": "rogersop",
