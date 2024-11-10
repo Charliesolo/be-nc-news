@@ -29,7 +29,7 @@ exports.postComment = (request, response, next) => {
 exports.deleteCommentById = (request, response, next) => {
     const {comment_id} = request.params
     return selectCommentById(comment_id)
-    .then(() =>{
+    .then(() =>{        
         removeCommentById(comment_id)        
     })        
     .then(() => {

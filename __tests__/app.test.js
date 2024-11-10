@@ -278,10 +278,11 @@ describe('DELETE /api/comments/:comment_id', () => {
         .delete('/api/comments/3')
         .expect(204)
         .then(() => {
-            return db.query(`SELECT * FROM COMMENTS`)            
+            return db.query(`SELECT * FROM COMMENTS
+                WHERE comment_id = 3;`)            
         })
         .then(({rows}) => {
-            expect(rows).toHaveLength(17)
+            expect(rows).toHaveLength(0)
         })
     })
     test('DELETE 400 returns Bad Request when given an invalid comment id', () =>{
