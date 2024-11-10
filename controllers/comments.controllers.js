@@ -26,17 +26,6 @@ exports.postComment = (request, response, next) => {
     })
 }
 
-// exports.deleteCommentById = (request, response, next) => {
-//     const {comment_id} = request.params
-//     return Promise.all([selectCommentById(comment_id) , removeCommentById(comment_id)])
-//     .then(() => {
-//         response.status(204).send()
-//     })
-//     .catch((err) => {
-//         next(err)
-//     })
-// }
-
 exports.deleteCommentById = (request, response, next) => {
     const {comment_id} = request.params
     return selectCommentById(comment_id)
